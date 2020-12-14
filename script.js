@@ -272,6 +272,7 @@ async function main(){
         const checkAgain = checkForUpdates(projectUrl, lastCheckedCommit);
         if (checkAgain) {
             setup(projectUrl);
+            // checking ID flaky tests
             try {
                 const newFlakyIDTests = checkIDTests(projectName);
                 const oldFlakyIDTests = Utilities.groupBy('Module Path', project.items);
@@ -282,6 +283,8 @@ async function main(){
             }catch(e){
                 console.error(`Error occured for NonDex command and project ${projectName}. Details: ${e}`);
             }
+
+            // checking OD flaky tests
             try {
                 const newFlakyODTests = checkODTests(projectName);
                 const oldFlakyODTests = Utilities.groupBy('Module Path', project.items);
