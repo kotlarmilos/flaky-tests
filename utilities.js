@@ -40,6 +40,28 @@ class Utilities {
         await csvWriter.writeRecords(data);
     }
 
+    static async writeDetailsCSV(path, data){
+
+        let existingData = [];
+        if (Utilities.fileExists(path)){
+            existingData = await Utilities.readCSV(path);
+        }
+        const csvWriter = createCsvWriter({
+            path: path,
+            header: [
+                {id: 'testFilePath', title: 'testFilePath'},
+                {id: 'deletedCommit', title: 'deletedCommit'},
+                {id: 'deletedDate', title: 'deletedDate'},
+                {id: 'modifiedCommit', title: 'modifiedCommit'},
+                {id: 'modifiedDate', title: 'modifiedDate'},
+                {id: 'createdCommit', title: 'createdCommit'},
+                {id: 'createdDate', title: 'createdDate'},
+        ]});
+
+        data = data.concat(existingData);
+        await csvWriter.writeRecords(data);
+    }
+
     static readFile(path) {
         return fs.readFileSync(path).toString();
     }
