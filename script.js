@@ -198,10 +198,14 @@ function checkIDTests(projectName) {
     for (const module of modules){
         if (Utilities.fileExists(module)) {
             let output;
+            const moduleName = path.basename(path.dirname(module)) === projectName ? '.' : path.basename(path.dirname(module));
             const modulePath = path.basename(path.dirname(module)) === projectName ? `projects/${projectName}` : `projects/${projectName}/${path.basename(path.dirname(module))}`;
+            execSync(`cd projects/${projectName} && mvn install -DskipTest -pl ${moduleName} -am`).toString();
             try {
                 console.log(`Runnung ${modulePath} module. This may take up to several hours.`);
-                output = execSync(`cd ${modulePath} && mvn edu.illinois:nondex-maven-plugin:1.1.2:nondex`).toString();
+
+                output = execSync(`cd projects/${projectName} && mvn -pl ${moduleName} edu.illinois:nondex-maven-plugin:1.1.2:nondex`).toString();
+                // output = execSync(`cd ${modulePath} && mvn edu.illinois:nondex-maven-plugin:1.1.2:nondex`).toString();
 
             } catch (e) {
                 output = e.stdout.toString();
@@ -233,10 +237,12 @@ function checkODTests(projectName) {
     for (const module of modules){
         if (Utilities.fileExists(module)) {
             let output;
+            const moduleName = path.basename(path.dirname(module)) === projectName ? '.' : path.basename(path.dirname(module));
             const modulePath = path.basename(path.dirname(module)) === projectName ? `projects/${projectName}` : `projects/${projectName}/${path.basename(path.dirname(module))}`;
             try {
                 console.log(`Runnung ${modulePath} module. This may take up to several hours.`);
-                output = execSync(`cd ${modulePath} && mvn testrunner:testplugin -Ddetector.detector_type=random-class-method -Ddt.randomize.rounds=10 -Ddt.detector.original_order.all_must_pass=false`).toString();
+                // output = execSync(`cd ${modulePath} && mvn testrunner:testplugin -Ddetector.detector_type=random-class-method -Ddt.randomize.rounds=10 -Ddt.detector.original_order.all_must_pass=false`).toString();
+                output = execSync(`cd projects/${projectName} && mvn -pl ${moduleName} testrunner:testplugin -Ddetector.detector_type=random-class-method -Ddt.randomize.rounds=10 -Ddt.detector.original_order.all_must_pass=false`).toString();
 
             } catch (e) {
                 output = e.stdout.toString();
